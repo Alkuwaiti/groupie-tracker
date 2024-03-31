@@ -1,7 +1,7 @@
 package models
 
 // Struct for incoming response data
-type ResponseAll struct {
+type ResponseArtist struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
 	Name         string   `json:"name"`

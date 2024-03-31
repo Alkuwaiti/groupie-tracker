@@ -26,7 +26,7 @@ func GetAllArtists() {
 
 	defer resp.Body.Close()
 
-	var responses []models.ResponseAll
+	var responses []models.ResponseArtist
 	if err := json.NewDecoder(resp.Body).Decode(&responses); err != nil {
 		fmt.Print(err.Error())
 		return
