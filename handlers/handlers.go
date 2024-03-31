@@ -17,8 +17,6 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 
 	response := logic.GetAllArtists()
 
-	fmt.Println(response)
-
 	// Parse the HTML/EJS template
 	tmpl, err := template.ParseFiles("./pages/index.html")
 	if err != nil {

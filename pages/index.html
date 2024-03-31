@@ -6,7 +6,23 @@
     <title>All Artists</title>
   </head>
   <body>
-    {foreach $response} {$response.ID}<br />
-    {/foreach}
+    <h1>Artists List</h1>
+    <ul>
+      {{range .}}
+      <li>
+        <p>ID: {{.ID}}</p>
+        <p>Name: {{.Name}}</p>
+        <img src="{{.Image}}" alt="artist" />
+        <p>Members:</p>
+        <ul>
+          {{range .Members}}
+          <li>{{.}}</li>
+          {{end}}
+        </ul>
+        <p>Creation Date: {{.CreationDate}}</p>
+        <p>First Album: {{.FirstAlbum}}</p>
+      </li>
+      {{end}}
+    </ul>
   </body>
 </html>
