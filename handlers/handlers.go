@@ -10,10 +10,10 @@ import (
 
 func RootHandler(w http.ResponseWriter, r *http.Request) {
 	// return an error if wrong path
-	if r.URL.Path != "/" {
-		ErrorHandler(w, r, http.StatusNotFound)
-		return
-	}
+	// if r.URL.Path != "/" {
+	// 	ErrorHandler(w, r, http.StatusNotFound)
+	// 	return
+	// }
 
 	response := logic.GetAllArtists()
 
@@ -31,6 +31,10 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+
+func ArtistHandler(w http.ResponseWriter, r *http.Request) {
+	logic.GetArtist(w, r)
 }
 
 // space
