@@ -3,19 +3,12 @@ package logic
 import (
 	"encoding/json"
 	"fmt"
+	models "groupie/models"
 	"net/http"
 )
 
 func GetAllArtists() {
 	// Struct for incoming response data
-	type Response struct {
-		ID           int      `json:"id"`
-		Image        string   `json:"image"`
-		Name         string   `json:"name"`
-		Members      []string `json:"members"`
-		CreationDate int      `json:"creationDate"`
-		FirstAlbum   string   `json:"firstAlbum"`
-	}
 
 	client := http.Client{}
 	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/artists", nil)
@@ -33,7 +26,7 @@ func GetAllArtists() {
 
 	defer resp.Body.Close()
 
-	var responses []Response
+	var responses []models.ResponseAll
 	if err := json.NewDecoder(resp.Body).Decode(&responses); err != nil {
 		fmt.Print(err.Error())
 		return
