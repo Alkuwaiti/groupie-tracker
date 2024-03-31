@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	logic "groupie/logic"
+	"html/template"
 	"net/http"
 	"os"
 )
@@ -14,7 +15,23 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logic.GetAllArtists()
+	response := logic.GetAllArtists()
+
+	fmt.Println(response)
+
+	// Parse the HTML/EJS template
+	tmpl, err := template.ParseFiles("./pages/index.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Execute the template, passing the data to it
+	err = tmpl.Execute(w, response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 }
 

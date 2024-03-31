@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func GetAllArtists() {
+func GetAllArtists() []models.ResponseArtist {
 	// Struct for incoming response data
 
 	client := http.Client{}
@@ -29,8 +29,9 @@ func GetAllArtists() {
 	var responses []models.ResponseArtist
 	if err := json.NewDecoder(resp.Body).Decode(&responses); err != nil {
 		fmt.Print(err.Error())
-		return
+		return nil
 	}
 
-	fmt.Println(responses)
+	return responses
+
 }
