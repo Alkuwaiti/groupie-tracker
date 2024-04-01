@@ -45,7 +45,6 @@ func GetArtist(w http.ResponseWriter, r *http.Request) models.ResponseArtist {
 		return models.ResponseArtist{}
 	}
 	artistName := path[2]
-	fmt.Fprintf(w, "Artist name: %s", artistName)
 
 	allArtists := GetAllArtists()
 

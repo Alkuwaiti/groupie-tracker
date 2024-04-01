@@ -36,7 +36,22 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ArtistHandler(w http.ResponseWriter, r *http.Request) {
-	logic.GetArtist(w, r)
+	artist := logic.GetArtist(w, r)
+
+	// Parse the HTML/EJS template
+	tmpl, err := template.ParseFiles("./pages/details.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Execute the template, passing the data to it
+	err = tmpl.Execute(w, artist)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 }
 
 // space
