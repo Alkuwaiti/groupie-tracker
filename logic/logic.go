@@ -8,8 +8,7 @@ import (
 	"strings"
 )
 
-func GetAllArtists() []models.ResponseArtist {
-	// Struct for incoming response data
+func GetAllArtists() []models.Artist {
 
 	client := http.Client{}
 	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/artists", nil)
@@ -27,7 +26,7 @@ func GetAllArtists() []models.ResponseArtist {
 
 	defer resp.Body.Close()
 
-	var responses []models.ResponseArtist
+	var responses []models.Artist
 	if err := json.NewDecoder(resp.Body).Decode(&responses); err != nil {
 		fmt.Print(err.Error())
 		return nil
@@ -37,12 +36,19 @@ func GetAllArtists() []models.ResponseArtist {
 
 }
 
-func GetArtist(w http.ResponseWriter, r *http.Request) models.ResponseArtist {
+func GetArtist(w http.ResponseWriter, r *http.Request) models.Artist {
 	// Split the URL path to extract the parameter
 	path := strings.Split(r.URL.Path, "/")
 	if len(path) < 3 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return models.ResponseArtist{}
+		return models.Artist{
+			ID:           0,
+			Image:        "",
+			Name:         "",
+			Members:      []string{},
+			CreationDate: 0,
+			FirstAlbum:   "",
+		}
 	}
 	artistName := path[2]
 
@@ -54,5 +60,58 @@ func GetArtist(w http.ResponseWriter, r *http.Request) models.ResponseArtist {
 		}
 
 	}
-	return models.ResponseArtist{}
+	return models.Artist{}
+}
+
+func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.ResponseIndex {
+	client := http.Client{}
+	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/locations", nil)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+	// add headers to the request
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+
+	defer resp.Body.Close()
+
+	var responses models.ResponseIndex
+	if err := json.NewDecoder(resp.Body).Decode(&responses); err != nil {
+		fmt.Print(err.Error())
+		return models.ResponseIndex{}
+	}
+
+	return responses
+}
+
+func ApiCall(url string, model interface{}) interface{} {
+	client := http.Client{}
+	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/"+url, nil)
+	if err != nil {
+		fmt.Print(err.Error())
+		return nil
+	}
+	// add headers to the request
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Print(err.Error())
+		return nil
+	}
+
+	defer resp.Body.Close()
+
+	if err := json.NewDecoder(resp.Body).Decode(model); err != nil {
+		fmt.Print(err.Error())
+		return nil
+	}
+
+	return model
 }

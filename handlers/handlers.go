@@ -54,6 +54,12 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func LocationsHandler(w http.ResponseWriter, r *http.Request) {
+	location := logic.GetLocationsForArtist(w, r)
+
+	fmt.Println(location)
+}
+
 // space
 // space
 // space
