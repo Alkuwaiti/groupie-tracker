@@ -80,13 +80,28 @@ func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Respon
 
 	defer resp.Body.Close()
 
-	var responses models.ResponseIndex
-	if err := json.NewDecoder(resp.Body).Decode(&responses); err != nil {
+	var allLocations models.ResponseIndex
+	if err := json.NewDecoder(resp.Body).Decode(&allLocations); err != nil {
 		fmt.Print(err.Error())
 		return models.ResponseIndex{}
 	}
 
-	return responses
+	path := strings.Split(r.URL.Path, "/")
+	if len(path) < 3 {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
+		return models.ResponseIndex{}
+	}
+	artistName := path[2]
+
+	fmt.Println(artistName)
+
+	// for _, artist := range allLocations.Index {
+	// 	if strings.EqualFold(artist.Name, artistName) {
+	// 		return artist
+	// 	}
+	// }
+
+	return allLocations
 }
 
 func ApiCall(url string, model interface{}) interface{} {
