@@ -57,7 +57,19 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 func LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	location := logic.GetLocationsForArtist(w, r)
 
-	fmt.Println(location)
+	// Parse the HTML/EJS template
+	tmpl, err := template.ParseFiles("./pages/locations.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Execute the template, passing the data to it
+	err = tmpl.Execute(w, location)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // space

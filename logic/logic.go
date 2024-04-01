@@ -63,7 +63,7 @@ func GetArtist(w http.ResponseWriter, r *http.Request) models.Artist {
 	return models.Artist{}
 }
 
-func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.ResponseIndex {
+func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Locations {
 	client := http.Client{}
 	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/locations", nil)
 	if err != nil {
@@ -83,25 +83,27 @@ func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Respon
 	var allLocations models.ResponseIndex
 	if err := json.NewDecoder(resp.Body).Decode(&allLocations); err != nil {
 		fmt.Print(err.Error())
-		return models.ResponseIndex{}
+		return models.Locations{}
 	}
 
 	path := strings.Split(r.URL.Path, "/")
 	if len(path) < 3 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return models.ResponseIndex{}
+		return models.Locations{}
 	}
 	artistName := path[2]
 
+	artist := GetArtist(w, r)
+
 	fmt.Println(artistName)
 
-	// for _, artist := range allLocations.Index {
-	// 	if strings.EqualFold(artist.Name, artistName) {
-	// 		return artist
-	// 	}
-	// }
+	for _, locations := range allLocations.Index {
+		if artist.ID == locations.ID {
+			return locations
+		}
+	}
 
-	return allLocations
+	return models.Locations{}
 }
 
 func ApiCall(url string, model interface{}) interface{} {
