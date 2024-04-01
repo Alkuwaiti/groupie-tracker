@@ -37,14 +37,23 @@ func GetAllArtists() []models.ResponseArtist {
 
 }
 
-func GetArtist(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("hellooo")
+func GetArtist(w http.ResponseWriter, r *http.Request) models.ResponseArtist {
 	// Split the URL path to extract the parameter
 	path := strings.Split(r.URL.Path, "/")
 	if len(path) < 3 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return
+		return models.ResponseArtist{}
 	}
 	artistName := path[2]
 	fmt.Fprintf(w, "Artist name: %s", artistName)
+
+	allArtists := GetAllArtists()
+
+	for _, artist := range allArtists {
+		if strings.EqualFold(artist.Name, artistName) {
+			return artist
+		}
+
+	}
+	return models.ResponseArtist{}
 }
