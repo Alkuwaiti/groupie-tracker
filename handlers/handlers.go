@@ -10,10 +10,10 @@ import (
 
 func RootHandler(w http.ResponseWriter, r *http.Request) {
 	// return an error if wrong path
-	// if r.URL.Path != "/" {
-	// 	ErrorHandler(w, r, http.StatusNotFound)
-	// 	return
-	// }
+	if r.URL.Path != "/" {
+		// ErrorHandler(w, r, http.StatusNotFound)
+		return
+	}
 
 	response := logic.GetAllArtists()
 
