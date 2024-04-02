@@ -84,6 +84,16 @@ func GetAllLocations(w http.ResponseWriter, r *http.Request) models.LocationsInd
 	return allLocations
 }
 
+func GetAllDates(w http.ResponseWriter, r *http.Request) models.DatesIndex {
+	var allDates models.DatesIndex
+	err := ApiCall("dates", &allDates)
+	if err != nil {
+		fmt.Println(err)
+		return models.DatesIndex{}
+	}
+	return allDates
+}
+
 func GetRelations(w http.ResponseWriter, r *http.Request) models.Relations {
 
 	var allRelations models.RelationIndex

@@ -52,6 +52,12 @@ func AllLocationsHandler(w http.ResponseWriter, r *http.Request) {
 	TemplateExecution(w, "allLocations", allLocations)
 }
 
+func AllDatesHandler(w http.ResponseWriter, r *http.Request) {
+	allDates := logic.GetAllDates(w, r)
+
+	TemplateExecution(w, "allDates", allDates)
+}
+
 func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
 
 	HandleHtml(w, "404")
