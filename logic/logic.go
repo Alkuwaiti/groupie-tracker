@@ -10,29 +10,14 @@ import (
 
 func GetAllArtists() []models.Artist {
 
-	client := http.Client{}
-	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/artists", nil)
+	var allArtists []models.Artist
+	err := ApiCall("artists", &allArtists)
 	if err != nil {
-		fmt.Print(err.Error())
-	}
-	// add headers to the request
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/json")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Print(err.Error())
+		fmt.Println(err)
+		return []models.Artist{}
 	}
 
-	defer resp.Body.Close()
-
-	var responses []models.Artist
-	if err := json.NewDecoder(resp.Body).Decode(&responses); err != nil {
-		fmt.Print(err.Error())
-		return nil
-	}
-
-	return responses
+	return allArtists
 
 }
 
@@ -184,7 +169,7 @@ func GetDates(w http.ResponseWriter, r *http.Request) models.Dates {
 	return models.Dates{}
 }
 
-func ApiCall(url string, model any) {
+func ApiCall(url string, model any) error {
 	client := http.Client{}
 	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/"+url, nil)
 	if err != nil {
@@ -203,7 +188,9 @@ func ApiCall(url string, model any) {
 
 	if err := json.NewDecoder(resp.Body).Decode(&model); err != nil {
 		fmt.Print(err.Error())
-		return
+		return err
 	}
+
+	return nil
 
 }
