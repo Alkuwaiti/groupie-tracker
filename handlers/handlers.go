@@ -94,5 +94,6 @@ func HandleHtml(w http.ResponseWriter, page string) {
 
 	// Write the HTML content to the response
 	w.Header().Set("Content-Type", "text/html")
+	w.WriteHeader(http.StatusNotFound)
 	w.Write(htmlFile)
 }
