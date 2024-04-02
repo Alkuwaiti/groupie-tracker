@@ -19,74 +19,29 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(response)
 
-	// Parse the HTML/EJS template
-	tmpl, err := template.ParseFiles("./pages/index.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// Execute the template, passing the data to it
-	err = tmpl.Execute(w, response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	TemplateExecution(w, "index", response)
 
 }
 
 func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 	artist := logic.GetArtist(w, r)
 
-	// Parse the HTML/EJS template
-	tmpl, err := template.ParseFiles("./pages/details.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// Execute the template, passing the data to it
-	err = tmpl.Execute(w, artist)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	TemplateExecution(w, "details", artist)
 
 }
 
 func LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	location := logic.GetLocationsForArtist(w, r)
 
-	// Parse the HTML/EJS template
-	tmpl, err := template.ParseFiles("./pages/locations.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	TemplateExecution(w, "locations", location)
 
-	// Execute the template, passing the data to it
-	err = tmpl.Execute(w, location)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 }
 
 func DatesHandler(w http.ResponseWriter, r *http.Request) {
 	dates := logic.GetDates(w, r)
 	// Parse the HTML/EJS template
-	tmpl, err := template.ParseFiles("./pages/dates.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 
-	// Execute the template, passing the data to it
-	err = tmpl.Execute(w, dates)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	TemplateExecution(w, "dates", dates)
 }
 
 func RelationsHandler(w http.ResponseWriter, r *http.Request) {
@@ -94,24 +49,28 @@ func RelationsHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(relations)
 
-	tmpl, err := template.ParseFiles("./pages/relations.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// Execute the template, passing the data to it
-	err = tmpl.Execute(w, relations)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	TemplateExecution(w, "relations", relations)
 }
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
 
 	HandleHtml(w, "404")
 
+}
+
+func TemplateExecution(w http.ResponseWriter, page string, data any) {
+	tmpl, err := template.ParseFiles("./pages/" + page + ".html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Execute the template, passing the data to it
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func HandleHtml(w http.ResponseWriter, page string) {
