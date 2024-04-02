@@ -17,29 +17,23 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 
 	response := logic.GetAllArtists()
 
-	fmt.Println(response)
-
 	TemplateExecution(w, "index", response)
-
 }
 
 func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 	artist := logic.GetArtist(w, r)
 
 	TemplateExecution(w, "details", artist)
-
 }
 
 func LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	location := logic.GetLocationsForArtist(w, r)
 
 	TemplateExecution(w, "locations", location)
-
 }
 
 func DatesHandler(w http.ResponseWriter, r *http.Request) {
 	dates := logic.GetDates(w, r)
-	// Parse the HTML/EJS template
 
 	TemplateExecution(w, "dates", dates)
 }
@@ -55,7 +49,6 @@ func RelationsHandler(w http.ResponseWriter, r *http.Request) {
 func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
 
 	HandleHtml(w, "404")
-
 }
 
 func TemplateExecution(w http.ResponseWriter, page string, data any) {

@@ -119,7 +119,6 @@ func GetDates(w http.ResponseWriter, r *http.Request) models.Dates {
 
 	for _, dates := range allDates.Index {
 		if artist.ID == dates.ID {
-			fmt.Println(dates)
 			return dates
 		}
 	}
