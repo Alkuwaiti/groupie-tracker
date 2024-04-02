@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"groupie/models"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
 
-func GetAllArtists() []models.Artist {
+func GetAllArtists(w http.ResponseWriter) []models.Artist {
 
 	var allArtists []models.Artist
-	err := ApiCall("artists", &allArtists)
+	err := ApiCall(w, "artists", &allArtists)
 	if err != nil {
 		fmt.Println(err)
 		return []models.Artist{}
@@ -40,7 +41,7 @@ func GetArtist(w http.ResponseWriter, r *http.Request) models.Artist {
 
 	actualArtistId, _ := strconv.Atoi(artistId)
 
-	allArtists := GetAllArtists()
+	allArtists := GetAllArtists(w)
 
 	for _, artist := range allArtists {
 		if artist.ID == actualArtistId {
@@ -54,7 +55,7 @@ func GetArtist(w http.ResponseWriter, r *http.Request) models.Artist {
 func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Locations {
 
 	var allLocations models.LocationsIndex
-	err := ApiCall("locations", &allLocations)
+	err := ApiCall(w, "locations", &allLocations)
 	if err != nil {
 		fmt.Println(err)
 		return models.Locations{}
@@ -79,7 +80,7 @@ func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Locati
 
 func GetAllLocations(w http.ResponseWriter, r *http.Request) models.LocationsIndex {
 	var allLocations models.LocationsIndex
-	err := ApiCall("locations", &allLocations)
+	err := ApiCall(w, "locations", &allLocations)
 	if err != nil {
 		fmt.Println(err)
 		return models.LocationsIndex{}
@@ -89,7 +90,7 @@ func GetAllLocations(w http.ResponseWriter, r *http.Request) models.LocationsInd
 
 func GetAllDates(w http.ResponseWriter, r *http.Request) models.DatesIndex {
 	var allDates models.DatesIndex
-	err := ApiCall("dates", &allDates)
+	err := ApiCall(w, "dates", &allDates)
 	if err != nil {
 		fmt.Println(err)
 		return models.DatesIndex{}
@@ -99,7 +100,7 @@ func GetAllDates(w http.ResponseWriter, r *http.Request) models.DatesIndex {
 
 func GetAllRelations(w http.ResponseWriter, r *http.Request) models.RelationIndex {
 	var allRelations models.RelationIndex
-	err := ApiCall("relation", &allRelations)
+	err := ApiCall(w, "relation", &allRelations)
 	if err != nil {
 		fmt.Println(err)
 		return models.RelationIndex{}
@@ -110,7 +111,7 @@ func GetAllRelations(w http.ResponseWriter, r *http.Request) models.RelationInde
 func GetRelations(w http.ResponseWriter, r *http.Request) models.Relations {
 
 	var allRelations models.RelationIndex
-	err := ApiCall("relation", &allRelations)
+	err := ApiCall(w, "relation", &allRelations)
 	if err != nil {
 		fmt.Println(err)
 		return models.Relations{}
@@ -136,7 +137,7 @@ func GetRelations(w http.ResponseWriter, r *http.Request) models.Relations {
 func GetDates(w http.ResponseWriter, r *http.Request) models.Dates {
 
 	var allDates models.DatesIndex
-	err := ApiCall("dates", &allDates)
+	err := ApiCall(w, "dates", &allDates)
 	if err != nil {
 		fmt.Println(err)
 		return models.Dates{}
@@ -159,10 +160,11 @@ func GetDates(w http.ResponseWriter, r *http.Request) models.Dates {
 	return models.Dates{}
 }
 
-func ApiCall(url string, model any) error {
+func ApiCall(w http.ResponseWriter, url string, model any) error {
 	client := http.Client{}
 	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/"+url, nil)
 	if err != nil {
+		HandleHtml(w, "500")
 		fmt.Print(err.Error())
 	}
 	// add headers to the request
@@ -171,6 +173,7 @@ func ApiCall(url string, model any) error {
 
 	resp, err := client.Do(req)
 	if err != nil {
+		HandleHtml(w, "500")
 		fmt.Print(err.Error())
 	}
 
@@ -183,4 +186,18 @@ func ApiCall(url string, model any) error {
 
 	return nil
 
+}
+
+func HandleHtml(w http.ResponseWriter, page string) {
+	// Read the HTML file
+	htmlFile, err := os.ReadFile("./pages/" + page + ".html")
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error reading HTML file: %s", err), http.StatusInternalServerError)
+		return
+	}
+
+	// Write the HTML content to the response
+	w.Header().Set("Content-Type", "text/html")
+	w.WriteHeader(http.StatusNotFound)
+	w.Write(htmlFile)
 }

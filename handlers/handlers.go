@@ -5,7 +5,6 @@ import (
 	"groupie/logic"
 	"html/template"
 	"net/http"
-	"os"
 )
 
 func RootHandler(w http.ResponseWriter, r *http.Request) {
@@ -15,7 +14,7 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := logic.GetAllArtists()
+	response := logic.GetAllArtists(w)
 
 	TemplateExecution(w, "index", response)
 }
@@ -66,7 +65,7 @@ func AllRelationsHandler(w http.ResponseWriter, r *http.Request) {
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
 
-	HandleHtml(w, "404")
+	logic.HandleHtml(w, "404")
 }
 
 func TemplateExecution(w http.ResponseWriter, page string, data any) {
@@ -82,18 +81,4 @@ func TemplateExecution(w http.ResponseWriter, page string, data any) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-}
-
-func HandleHtml(w http.ResponseWriter, page string) {
-	// Read the HTML file
-	htmlFile, err := os.ReadFile("./pages/" + page + ".html")
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Error reading HTML file: %s", err), http.StatusInternalServerError)
-		return
-	}
-
-	// Write the HTML content to the response
-	w.Header().Set("Content-Type", "text/html")
-	w.WriteHeader(http.StatusNotFound)
-	w.Write(htmlFile)
 }
