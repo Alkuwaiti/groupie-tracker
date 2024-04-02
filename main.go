@@ -18,5 +18,4 @@ func main() {
 	http.HandleFunc("/relations/", handlers.RelationsHandler)
 	http.HandleFunc("/", handlers.RootHandler)
 	http.ListenAndServe(":3000", nil)
-	// TODO: relations api
 }
