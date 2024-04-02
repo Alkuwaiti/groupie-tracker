@@ -94,6 +94,16 @@ func GetAllDates(w http.ResponseWriter, r *http.Request) models.DatesIndex {
 	return allDates
 }
 
+func GetAllRelations(w http.ResponseWriter, r *http.Request) models.RelationIndex {
+	var allRelations models.RelationIndex
+	err := ApiCall("relation", &allRelations)
+	if err != nil {
+		fmt.Println(err)
+		return models.RelationIndex{}
+	}
+	return allRelations
+}
+
 func GetRelations(w http.ResponseWriter, r *http.Request) models.Relations {
 
 	var allRelations models.RelationIndex

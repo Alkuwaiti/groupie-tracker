@@ -13,6 +13,7 @@ func main() {
 	http.HandleFunc("/locations", handlers.AllLocationsHandler)
 	http.HandleFunc("/dates", handlers.AllDatesHandler)
 	http.HandleFunc("/dates/", handlers.DatesHandler)
+	http.HandleFunc("/relations", handlers.AllRelationsHandler)
 	http.HandleFunc("/relations/", handlers.RelationsHandler)
 	http.HandleFunc("/", handlers.RootHandler)
 	http.ListenAndServe(":3000", nil)

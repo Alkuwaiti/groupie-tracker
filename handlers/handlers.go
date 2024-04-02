@@ -58,6 +58,12 @@ func AllDatesHandler(w http.ResponseWriter, r *http.Request) {
 	TemplateExecution(w, "allDates", allDates)
 }
 
+func AllRelationsHandler(w http.ResponseWriter, r *http.Request) {
+	allRelations := logic.GetAllRelations(w, r)
+
+	TemplateExecution(w, "allRelations", allRelations)
+}
+
 func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
 
 	HandleHtml(w, "404")
