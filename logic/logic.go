@@ -49,25 +49,11 @@ func GetArtist(w http.ResponseWriter, r *http.Request) models.Artist {
 }
 
 func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Locations {
-	client := http.Client{}
-	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/locations", nil)
-	if err != nil {
-		fmt.Print(err.Error())
-	}
-	// add headers to the request
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/json")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Print(err.Error())
-	}
-
-	defer resp.Body.Close()
 
 	var allLocations models.LocationsIndex
-	if err := json.NewDecoder(resp.Body).Decode(&allLocations); err != nil {
-		fmt.Print(err.Error())
+	err := ApiCall("locations", &allLocations)
+	if err != nil {
+		fmt.Println(err)
 		return models.Locations{}
 	}
 
