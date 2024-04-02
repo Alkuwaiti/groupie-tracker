@@ -41,9 +41,15 @@ func DatesHandler(w http.ResponseWriter, r *http.Request) {
 func RelationsHandler(w http.ResponseWriter, r *http.Request) {
 	relations := logic.GetRelations(w, r)
 
-	fmt.Println(relations)
-
 	TemplateExecution(w, "relations", relations)
+}
+
+func AllLocationsHandler(w http.ResponseWriter, r *http.Request) {
+	allLocations := logic.GetAllLocations(w, r)
+
+	fmt.Println(allLocations)
+
+	TemplateExecution(w, "allLocations", allLocations)
 }
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {

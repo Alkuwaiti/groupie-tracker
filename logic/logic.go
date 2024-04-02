@@ -3,7 +3,7 @@ package logic
 import (
 	"encoding/json"
 	"fmt"
-	models "groupie/models"
+	"groupie/models"
 	"net/http"
 	"strings"
 )
@@ -72,6 +72,16 @@ func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Locati
 	}
 
 	return models.Locations{}
+}
+
+func GetAllLocations(w http.ResponseWriter, r *http.Request) models.LocationsIndex {
+	var allLocations models.LocationsIndex
+	err := ApiCall("locations", &allLocations)
+	if err != nil {
+		fmt.Println(err)
+		return models.LocationsIndex{}
+	}
+	return allLocations
 }
 
 func GetRelations(w http.ResponseWriter, r *http.Request) models.Relations {
