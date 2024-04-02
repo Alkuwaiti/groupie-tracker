@@ -184,12 +184,11 @@ func GetDates(w http.ResponseWriter, r *http.Request) models.Dates {
 	return models.Dates{}
 }
 
-func ApiCall(url string, model interface{}) interface{} {
+func ApiCall(url string, model any) {
 	client := http.Client{}
 	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/"+url, nil)
 	if err != nil {
 		fmt.Print(err.Error())
-		return nil
 	}
 	// add headers to the request
 	req.Header.Add("Accept", "application/json")
@@ -198,15 +197,13 @@ func ApiCall(url string, model interface{}) interface{} {
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Print(err.Error())
-		return nil
 	}
 
 	defer resp.Body.Close()
 
-	if err := json.NewDecoder(resp.Body).Decode(model); err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(&model); err != nil {
 		fmt.Print(err.Error())
-		return nil
+		return
 	}
 
-	return model
 }
