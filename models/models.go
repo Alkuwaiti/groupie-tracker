@@ -21,10 +21,19 @@ type Dates struct {
 	Dates []string `json:"dates"`
 }
 
+type Relations struct {
+	ID             int                 `json:"id"`
+	DatesLocations map[string][]string `json:"datesLocations"`
+}
+
 type LocationsIndex struct {
 	Index []Locations `json:"index"`
 }
 
 type DatesIndex struct {
 	Index []Dates `json:"index"`
+}
+
+type RelationIndex struct {
+	Index []Relations `json:"index"`
 }

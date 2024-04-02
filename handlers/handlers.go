@@ -89,6 +89,25 @@ func DatesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func RelationsHandler(w http.ResponseWriter, r *http.Request) {
+	relations := logic.GetRelations(w, r)
+
+	fmt.Println(relations)
+
+	tmpl, err := template.ParseFiles("./pages/relations.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Execute the template, passing the data to it
+	err = tmpl.Execute(w, relations)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
 
 	HandleHtml(w, "404")
