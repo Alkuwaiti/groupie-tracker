@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"groupie/models"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -35,12 +36,14 @@ func GetArtist(w http.ResponseWriter, r *http.Request) models.Artist {
 			FirstAlbum:   "",
 		}
 	}
-	artistName := path[2]
+	artistId := path[2]
+
+	actualArtistId, _ := strconv.Atoi(artistId)
 
 	allArtists := GetAllArtists()
 
 	for _, artist := range allArtists {
-		if strings.EqualFold(artist.Name, artistName) {
+		if artist.ID == actualArtistId {
 			return artist
 		}
 
