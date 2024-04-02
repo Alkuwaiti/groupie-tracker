@@ -9,6 +9,7 @@ import (
 func main() {
 	fmt.Print()
 	http.HandleFunc("/artists/", handlers.ArtistHandler)
+	http.HandleFunc("/artists", handlers.RootHandler)
 	http.HandleFunc("/locations/", handlers.LocationsHandler)
 	http.HandleFunc("/locations", handlers.AllLocationsHandler)
 	http.HandleFunc("/dates", handlers.AllDatesHandler)
