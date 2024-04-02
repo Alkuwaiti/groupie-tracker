@@ -16,6 +16,15 @@ type Locations struct {
 	Dates     string   `json:"dates"`
 }
 
-type ResponseIndex struct {
+type Dates struct {
+	ID    int      `json:"id"`
+	Dates []string `json:"dates"`
+}
+
+type LocationsIndex struct {
 	Index []Locations `json:"index"`
+}
+
+type DatesIndex struct {
+	Index []Dates `json:"index"`
 }

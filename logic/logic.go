@@ -80,7 +80,7 @@ func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Locati
 
 	defer resp.Body.Close()
 
-	var allLocations models.ResponseIndex
+	var allLocations models.LocationsIndex
 	if err := json.NewDecoder(resp.Body).Decode(&allLocations); err != nil {
 		fmt.Print(err.Error())
 		return models.Locations{}
@@ -91,11 +91,8 @@ func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Locati
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
 		return models.Locations{}
 	}
-	artistName := path[2]
 
 	artist := GetArtist(w, r)
-
-	fmt.Println(artistName)
 
 	for _, locations := range allLocations.Index {
 		if artist.ID == locations.ID {
@@ -104,6 +101,47 @@ func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Locati
 	}
 
 	return models.Locations{}
+}
+
+func GetDates(w http.ResponseWriter, r *http.Request) models.Dates {
+	client := http.Client{}
+	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/dates", nil)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+	// add headers to the request
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("Content-Type", "application/json")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+
+	defer resp.Body.Close()
+
+	var allDates models.DatesIndex
+	if err := json.NewDecoder(resp.Body).Decode(&allDates); err != nil {
+		fmt.Print(err.Error())
+		return models.Dates{}
+	}
+
+	path := strings.Split(r.URL.Path, "/")
+	if len(path) < 3 {
+		http.Error(w, "Invalid URL", http.StatusBadRequest)
+		return models.Dates{}
+	}
+
+	artist := GetArtist(w, r)
+
+	for _, dates := range allDates.Index {
+		if artist.ID == dates.ID {
+			fmt.Println(dates)
+			return dates
+		}
+	}
+
+	return models.Dates{}
 }
 
 func ApiCall(url string, model interface{}) interface{} {

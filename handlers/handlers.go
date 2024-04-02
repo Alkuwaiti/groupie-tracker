@@ -72,14 +72,22 @@ func LocationsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// space
-// space
-// space
-// space
-// space
-// space
-// space
-// space
+func DatesHandler(w http.ResponseWriter, r *http.Request) {
+	dates := logic.GetDates(w, r)
+	// Parse the HTML/EJS template
+	tmpl, err := template.ParseFiles("./pages/dates.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Execute the template, passing the data to it
+	err = tmpl.Execute(w, dates)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
 
