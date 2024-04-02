@@ -101,25 +101,11 @@ func GetRelations(w http.ResponseWriter, r *http.Request) models.Relations {
 }
 
 func GetDates(w http.ResponseWriter, r *http.Request) models.Dates {
-	client := http.Client{}
-	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/dates", nil)
-	if err != nil {
-		fmt.Print(err.Error())
-	}
-	// add headers to the request
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/json")
-
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Print(err.Error())
-	}
-
-	defer resp.Body.Close()
 
 	var allDates models.DatesIndex
-	if err := json.NewDecoder(resp.Body).Decode(&allDates); err != nil {
-		fmt.Print(err.Error())
+	err := ApiCall("dates", &allDates)
+	if err != nil {
+		fmt.Println(err)
 		return models.Dates{}
 	}
 
