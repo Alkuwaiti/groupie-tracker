@@ -11,7 +11,7 @@
       {{range .}}
       <li>
         <p>ID: {{.ID}}</p>
-        <p>Name: {{.Name}}</p>
+        <p>Name: <a href="/artists/{{.ID}}">{{.Name}}</a></p>
         <img src="{{.Image}}" alt="artist" />
         <p>Members:</p>
         <ul>
@@ -21,6 +21,9 @@
         </ul>
         <p>Creation Date: {{.CreationDate}}</p>
         <p>First Album: {{.FirstAlbum}}</p>
+        <a href="/locations/{{.ID}}">Locations</a>
+        <a href="/dates/{{.ID}}">Dates</a>
+        <a href="/relations/{{.ID}}">Relations</a>
       </li>
       {{end}}
     </ul>

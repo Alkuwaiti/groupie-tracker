@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	logic "groupie/logic"
+	"groupie/logic"
 	"html/template"
 	"net/http"
 	"os"
@@ -10,7 +10,7 @@ import (
 
 func RootHandler(w http.ResponseWriter, r *http.Request) {
 	// return an error if wrong path
-	if r.URL.Path != "/" {
+	if r.URL.Path != "/" && r.URL.Path != "/artists" {
 		ErrorHandler(w, r, http.StatusNotFound)
 		return
 	}
