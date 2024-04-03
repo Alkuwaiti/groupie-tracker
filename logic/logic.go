@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"groupie/models"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -164,8 +165,16 @@ func ApiCall(w http.ResponseWriter, url string, model any) error {
 	client := http.Client{}
 	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/"+url, nil)
 	if err != nil {
-		HandleHtml(w, "500")
-		fmt.Print(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "application/json")
+		resp := make(map[string]string)
+		resp["message"] = "Some Error Occurred"
+		jsonResp, err := json.Marshal(resp)
+		if err != nil {
+			log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+		}
+		w.Write(jsonResp)
+		return err
 	}
 	// add headers to the request
 	req.Header.Add("Accept", "application/json")
@@ -173,8 +182,16 @@ func ApiCall(w http.ResponseWriter, url string, model any) error {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		HandleHtml(w, "500")
-		fmt.Print(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "application/json")
+		resp := make(map[string]string)
+		resp["message"] = "Some Error Occurred"
+		jsonResp, err := json.Marshal(resp)
+		if err != nil {
+			log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+		}
+		w.Write(jsonResp)
+		return err
 	}
 
 	defer resp.Body.Close()
