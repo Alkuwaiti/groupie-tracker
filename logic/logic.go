@@ -11,20 +11,20 @@ import (
 	"strings"
 )
 
-func GetAllArtists(w http.ResponseWriter) []models.Artist {
+func GetAllArtists(w http.ResponseWriter) ([]models.Artist, error) {
 
 	var allArtists []models.Artist
 	err := ApiCall(w, "artists", &allArtists)
 	if err != nil {
 		fmt.Println(err)
-		return []models.Artist{}
+		return []models.Artist{}, err
 	}
 
-	return allArtists
+	return allArtists, err
 
 }
 
-func GetArtist(w http.ResponseWriter, r *http.Request) models.Artist {
+func GetArtist(w http.ResponseWriter, r *http.Request) (models.Artist, error) {
 	// Split the URL path to extract the parameter
 	path := strings.Split(r.URL.Path, "/")
 	if len(path) < 3 {
@@ -36,129 +36,129 @@ func GetArtist(w http.ResponseWriter, r *http.Request) models.Artist {
 			Members:      []string{},
 			CreationDate: 0,
 			FirstAlbum:   "",
-		}
+		}, nil
 	}
 	artistId := path[2]
 
 	actualArtistId, _ := strconv.Atoi(artistId)
 
-	allArtists := GetAllArtists(w)
+	allArtists, err := GetAllArtists(w)
 
 	for _, artist := range allArtists {
 		if artist.ID == actualArtistId {
-			return artist
+			return artist, err
 		}
 
 	}
-	return models.Artist{}
+	return models.Artist{}, err
 }
 
-func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) models.Locations {
+func GetLocationsForArtist(w http.ResponseWriter, r *http.Request) (models.Locations, error) {
 
 	var allLocations models.LocationsIndex
 	err := ApiCall(w, "locations", &allLocations)
 	if err != nil {
 		fmt.Println(err)
-		return models.Locations{}
+		return models.Locations{}, err
 	}
 
 	path := strings.Split(r.URL.Path, "/")
 	if len(path) < 3 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return models.Locations{}
+		return models.Locations{}, err
 	}
 
-	artist := GetArtist(w, r)
+	artist, err := GetArtist(w, r)
 
 	for _, locations := range allLocations.Index {
 		if artist.ID == locations.ID {
-			return locations
+			return locations, err
 		}
 	}
 
-	return models.Locations{}
+	return models.Locations{}, err
 }
 
-func GetAllLocations(w http.ResponseWriter, r *http.Request) models.LocationsIndex {
+func GetAllLocations(w http.ResponseWriter, r *http.Request) (models.LocationsIndex, error) {
 	var allLocations models.LocationsIndex
 	err := ApiCall(w, "locations", &allLocations)
 	if err != nil {
 		fmt.Println(err)
-		return models.LocationsIndex{}
+		return models.LocationsIndex{}, err
 	}
-	return allLocations
+	return allLocations, err
 }
 
-func GetAllDates(w http.ResponseWriter, r *http.Request) models.DatesIndex {
+func GetAllDates(w http.ResponseWriter, r *http.Request) (models.DatesIndex, error) {
 	var allDates models.DatesIndex
 	err := ApiCall(w, "dates", &allDates)
 	if err != nil {
 		fmt.Println(err)
-		return models.DatesIndex{}
+		return models.DatesIndex{}, err
 	}
-	return allDates
+	return allDates, err
 }
 
-func GetAllRelations(w http.ResponseWriter, r *http.Request) models.RelationIndex {
+func GetAllRelations(w http.ResponseWriter, r *http.Request) (models.RelationIndex, error) {
 	var allRelations models.RelationIndex
 	err := ApiCall(w, "relation", &allRelations)
 	if err != nil {
 		fmt.Println(err)
-		return models.RelationIndex{}
+		return models.RelationIndex{}, err
 	}
-	return allRelations
+	return allRelations, err
 }
 
-func GetRelations(w http.ResponseWriter, r *http.Request) models.Relations {
+func GetRelations(w http.ResponseWriter, r *http.Request) (models.Relations, error) {
 
 	var allRelations models.RelationIndex
 	err := ApiCall(w, "relation", &allRelations)
 	if err != nil {
 		fmt.Println(err)
-		return models.Relations{}
+		return models.Relations{}, err
 	}
 
 	path := strings.Split(r.URL.Path, "/")
 	if len(path) < 3 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return models.Relations{}
+		return models.Relations{}, err
 	}
 
-	artist := GetArtist(w, r)
+	artist, err := GetArtist(w, r)
 
 	for _, relations := range allRelations.Index {
 		if artist.ID == relations.ID {
-			return relations
+			return relations, err
 		}
 	}
 
-	return models.Relations{}
+	return models.Relations{}, err
 }
 
-func GetDates(w http.ResponseWriter, r *http.Request) models.Dates {
+func GetDates(w http.ResponseWriter, r *http.Request) (models.Dates, error) {
 
 	var allDates models.DatesIndex
 	err := ApiCall(w, "dates", &allDates)
 	if err != nil {
 		fmt.Println(err)
-		return models.Dates{}
+		return models.Dates{}, err
 	}
 
 	path := strings.Split(r.URL.Path, "/")
 	if len(path) < 3 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return models.Dates{}
+		return models.Dates{}, err
 	}
 
-	artist := GetArtist(w, r)
+	artist, err := GetArtist(w, r)
 
 	for _, dates := range allDates.Index {
 		if artist.ID == dates.ID {
-			return dates
+			return dates, err
 		}
 	}
 
-	return models.Dates{}
+	return models.Dates{}, err
 }
 
 func ApiCall(w http.ResponseWriter, url string, model any) error {

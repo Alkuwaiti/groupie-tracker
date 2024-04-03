@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"groupie/logic"
 	"html/template"
 	"net/http"
@@ -14,53 +13,83 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := logic.GetAllArtists(w)
+	response, err := logic.GetAllArtists(w)
 
-	TemplateExecution(w, "index", response)
+	if err == nil {
+		TemplateExecution(w, "index", response)
+
+	}
+
 }
 
 func ArtistHandler(w http.ResponseWriter, r *http.Request) {
-	artist := logic.GetArtist(w, r)
+	artist, err := logic.GetArtist(w, r)
 
-	TemplateExecution(w, "details", artist)
+	if err == nil {
+		TemplateExecution(w, "details", artist)
+
+	}
+
 }
 
 func LocationsHandler(w http.ResponseWriter, r *http.Request) {
-	location := logic.GetLocationsForArtist(w, r)
+	location, err := logic.GetLocationsForArtist(w, r)
 
-	TemplateExecution(w, "locations", location)
+	if err == nil {
+		TemplateExecution(w, "locations", location)
+
+	}
+
 }
 
 func DatesHandler(w http.ResponseWriter, r *http.Request) {
-	dates := logic.GetDates(w, r)
+	dates, err := logic.GetDates(w, r)
 
-	TemplateExecution(w, "dates", dates)
+	if err == nil {
+		TemplateExecution(w, "dates", dates)
+
+	}
+
 }
 
 func RelationsHandler(w http.ResponseWriter, r *http.Request) {
-	relations := logic.GetRelations(w, r)
+	relations, err := logic.GetRelations(w, r)
 
-	TemplateExecution(w, "relations", relations)
+	if err == nil {
+		TemplateExecution(w, "relations", relations)
+
+	}
+
 }
 
 func AllLocationsHandler(w http.ResponseWriter, r *http.Request) {
-	allLocations := logic.GetAllLocations(w, r)
+	allLocations, err := logic.GetAllLocations(w, r)
 
-	fmt.Println(allLocations)
+	if err == nil {
+		TemplateExecution(w, "allLocations", allLocations)
 
-	TemplateExecution(w, "allLocations", allLocations)
+	}
+
 }
 
 func AllDatesHandler(w http.ResponseWriter, r *http.Request) {
-	allDates := logic.GetAllDates(w, r)
+	allDates, err := logic.GetAllDates(w, r)
 
-	TemplateExecution(w, "allDates", allDates)
+	if err == nil {
+		TemplateExecution(w, "allDates", allDates)
+
+	}
+
 }
 
 func AllRelationsHandler(w http.ResponseWriter, r *http.Request) {
-	allRelations := logic.GetAllRelations(w, r)
+	allRelations, err := logic.GetAllRelations(w, r)
 
-	TemplateExecution(w, "allRelations", allRelations)
+	if err == nil {
+		TemplateExecution(w, "allRelations", allRelations)
+
+	}
+
 }
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request, status int) {
