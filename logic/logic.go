@@ -163,19 +163,8 @@ func GetDates(w http.ResponseWriter, r *http.Request) (models.Dates, error) {
 
 func ApiCall(w http.ResponseWriter, url string, model any) error {
 	client := http.Client{}
-	req, err := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/"+url, nil)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Header().Set("Content-Type", "application/json")
-		resp := make(map[string]string)
-		resp["message"] = "Some Error Occurred"
-		jsonResp, err := json.Marshal(resp)
-		if err != nil {
-			log.Fatalf("Error happened in JSON marshal. Err: %s", err)
-		}
-		w.Write(jsonResp)
-		return err
-	}
+	req, _ := http.NewRequest("GET", "https://groupietrackers.herokuapp.com/api/"+url, nil)
+
 	// add headers to the request
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
